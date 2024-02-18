@@ -80,36 +80,44 @@ function App() {
     }
   }
 
-  const handleStateEditing = (id, { target }) => {
-    setTasks(tasks => {
-      const updatedTasks = tasks.map(task => {
-
-        if (task.id === id) {
-
-          if (task.isEditing) {
-            const taskContainer = target.parentNode.parentNode;
-
-            let subject = taskContainer.querySelector('.task_subject').textContent;
-
-            return {
-              ...task,
-              isEditing: false,
-              task: subject == '' ? task.task : subject
-            };
-          } else {
-            return {
-              ...task,
-              isEditing: true
-            };
-          }
+  const handleStateEditing = async (id, { target }) => {
+    const updatedTasks = tasks.map(task => {
+      if (task.id === id) {
+        if (task.isEditing) {
+          const taskContainer = target.parentNode.parentNode;
+          let subject = taskContainer.querySelector('.task_subject').textContent;
+          return {
+            ...task,
+            isEditing: false,
+            task: subject == '' ? task.task : subject
+          };
+        } else {
+          return {
+            ...task,
+            isEditing: true
+          };
         }
-
-        return task;
-      });
-
-      localStorage.setItem('Tasks', JSON.stringify(updatedTasks));
-      return updatedTasks
+      }
+      return task;
     });
+
+    const indexTaskToUpdate = updatedTasks.findIndex(task => task.id === id);
+
+    try {
+      const response = await axios.put(`http://localhost:3000/tasks/${id}`, updatedTasks[indexTaskToUpdate]);
+
+      if (response.status === 200) {
+        setTasks(updatedTasks);
+        localStorage.setItem('Tasks', JSON.stringify(updatedTasks));
+
+        console.log(response.data.message);
+      } else {
+        console.log(response.data.message);
+      }
+      
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   const handleDelete = async (id) => {
