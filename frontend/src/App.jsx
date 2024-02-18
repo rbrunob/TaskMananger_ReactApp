@@ -25,56 +25,59 @@ function App() {
   }, []);
 
   const insertNewTask = async (task) => {
-    setTasks([
-      ...tasks,
-      {
-        id: uuidv4(),
-        task: task,
-        isComplete: false,
-        isEditing: false
-      }
-    ])
-
-    localStorage.setItem('Tasks', JSON.stringify([
-      ...tasks,
-      {
-        id: uuidv4(),
-        task: task,
-        isComplete: false,
-        isEditing: false
-      }
-    ]));
+    const newTaskToInsert = {
+      id: uuidv4(),
+      task: task,
+      isComplete: false,
+      isEditing: false
+    };
 
     try {
-      const response = await axios.post('http://localhost:3000/tasks',
-        JSON.stringify(
-          {
-            id: uuidv4(),
-            task: task,
-            isComplete: false,
-            isEditing: false
-          }
-        ),
-        {
-          headers: { 'Content-Type': 'application/json' }
-        }
-      );
+      const response = await axios.post('http://localhost:3000/tasks', newTaskToInsert, {
+        headers: { 'Content-Type': 'application/json' }
+      });
 
       if (response.status === 200) {
-        console.log(response.data.message)
+        setTasks(
+          [...tasks,
+            newTaskToInsert
+          ]
+        );
+
+        localStorage.setItem('Tasks', JSON.stringify([...tasks, newTaskToInsert]));
+
+        console.log(response.data.message);
       } else {
-        console.log(response.data.message)
+        console.log(response.data.message);
       }
 
     } catch (error) {
-      console.error('Ocorreu um error ao adicionar uma tarefa', error);
+      console.error('Ocorreu um erro ao adicionar uma tarefa', error);
     }
-  }
+  };
 
-  const handleStateComplete = (id) => {
-    setTasks(tasks.map(task => task.id === id ? { ...task, isComplete: !task.isComplete } : { ...task }))
+  const handleStateComplete = async (id) => {
 
-    localStorage.setItem('Tasks', JSON.stringify(tasks.map(task => task.id === id ? { ...task, isComplete: !task.isComplete } : { ...task })));
+    const findTaskToUpdate = tasks.find(task => (task.id === id));
+
+    const updatedTask = { ...findTaskToUpdate, isComplete: !findTaskToUpdate.isComplete };
+
+    try {
+      const response = await axios.put(`http://localhost:3000/tasks/${id}`, updatedTask);
+
+      if (response.status === 200) {
+        setTasks(tasks.map(task => task.id === id ? updatedTask : { ...task }))
+
+        localStorage.setItem('Tasks', JSON.stringify(tasks.map(task => task.id === id ? updatedTask : { ...task })));
+
+        console.log(response.data.message);
+      } else {
+        console.log(response.data.message);
+      }
+
+    } catch (error) {
+      console.log(error.message)
+    }
   }
 
   const handleStateEditing = (id, { target }) => {
@@ -99,14 +102,13 @@ function App() {
               isEditing: true
             };
           }
-
         }
 
         return task;
       });
 
       localStorage.setItem('Tasks', JSON.stringify(updatedTasks));
-      return updatedTasks;
+      return updatedTasks
     });
   };
 
