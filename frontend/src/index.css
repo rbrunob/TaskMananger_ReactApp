@@ -28,6 +28,18 @@ body {
   background: linear-gradient(45deg, #7958b8 70%, white 0%);
 }
 
+.container_tasks::-webkit-scrollbar {
+  width: 4px;
+}
+
+.container_tasks::-webkit-scrollbar-track {
+  background: #0000000c;
+}
+
+.container_tasks::-webkit-scrollbar-thumb {
+  background-color: #494949;
+}
+
 /* container */
 
 .container {
@@ -78,18 +90,21 @@ body {
 .container_tasks {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   flex-direction: column;
   gap: 12px;
 
   width: 100%;
   height: auto;
 
+  max-height: 540px;
   background-color: white;
 
   padding: 40px 12px 50px;
-
   border-radius: 4px;
+  
+
+  overflow: auto;
 }
 
 /* container tasks */

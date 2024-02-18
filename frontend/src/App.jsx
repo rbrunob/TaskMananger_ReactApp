@@ -3,9 +3,28 @@ import Create from "./Components/Create/Create";
 import Task from "./Components/Task/Task";
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
+import Notification from "./Components/Notification/Notification";
 
 function App() {
   const [tasks, setTasks] = useState(JSON.parse(localStorage.getItem('Tasks')) || []);
+  const [notification, setNotification] = useState({
+    message: '',
+    isError: false,
+    active: false
+  })
+
+  const showNotification = (dataNotification) => {
+    setNotification({
+      message: dataNotification.message,
+      isError: dataNotification.isError,
+      active: true
+    });
+
+    setTimeout(() => setNotification({
+      ...notification,
+      active: false
+    }), 800);
+  }
 
   useEffect(() => {
     const getTasks = async () => {
@@ -17,7 +36,7 @@ function App() {
         }
 
       } catch (error) {
-        console.log(`(${error.message}) Ocorreu um erro ao realizar a busca de tarefas: [ Servidor pode estar fora do ar, tente inicia-lo com "node server.js" ]`)
+        console.error(`(${error.message}) Ocorreu um erro ao realizar a busca de tarefas: [ Servidor pode estar fora do ar, tente inicia-lo com "node server.js" ]`)
       }
     };
 
@@ -46,9 +65,16 @@ function App() {
 
         localStorage.setItem('Tasks', JSON.stringify([...tasks, newTaskToInsert]));
 
-        console.log(response.data.message);
+        showNotification({
+          message: response.data.message,
+          isError: false
+        })
+
       } else {
-        console.log(response.data.message);
+        showNotification({
+          message: response.data.message,
+          isError: true
+        })
       }
 
     } catch (error) {
@@ -76,7 +102,7 @@ function App() {
       }
 
     } catch (error) {
-      console.log(error.message)
+      console.error(error.message)
     }
   }
 
@@ -110,13 +136,21 @@ function App() {
         setTasks(updatedTasks);
         localStorage.setItem('Tasks', JSON.stringify(updatedTasks));
 
-        console.log(response.data.message);
+        if (!updatedTasks[indexTaskToUpdate].isEditing) {
+          showNotification({
+            message: response.data.message,
+            isError: false
+          })
+        }
       } else {
-        console.log(response.data.message);
+        showNotification({
+          message: response.data.message,
+          isError: true
+        })
       }
-      
+
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 
@@ -125,16 +159,22 @@ function App() {
       const response = await axios.delete(`http://localhost:3000/tasks/${id}`);
 
       if (response.status === 200) {
-        console.log(response.data.message)
+        showNotification({
+          message: response.data.message,
+          isError: false
+        })
 
         setTasks(tasks.filter(task => task.id !== id));
 
         localStorage.setItem('Tasks', JSON.stringify(tasks.filter(task => task.id !== id)));
       } else {
-        console.log(response.data.message)
+        showNotification({
+          message: response.data.message,
+          isError: false
+        })
       }
     } catch (error) {
-      console.log(error.message)
+      console.error(error.message)
     }
   }
 
@@ -164,6 +204,11 @@ function App() {
           <Create insertNewTask={insertNewTask} />
         </div>
 
+        <Notification
+          message={notification.message}
+          isError={notification.isError}
+          active={notification.active}
+        />
       </main>
     </>
   )
