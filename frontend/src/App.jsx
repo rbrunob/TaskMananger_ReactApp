@@ -17,7 +17,7 @@ function App() {
         }
 
       } catch (error) {
-        console.error('Ocorreu um erro ao realizar busca de tarefas:', error);
+        console.log(`(${error.message}) Ocorreu um erro ao realizar a busca de tarefas: [ Servidor pode estar fora do ar, tente inicia-lo com "node server.js" ]`)
       }
     };
 
@@ -61,6 +61,8 @@ function App() {
       );
 
       if (response.status === 200) {
+        console.log(response.data.message)
+      } else {
         console.log(response.data.message)
       }
 
@@ -108,10 +110,22 @@ function App() {
     });
   };
 
-  const handleDelete = (id) => {
-    setTasks(tasks.filter(task => task.id !== id));
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(`http://localhost:3000/tasks/${id}`);
 
-    localStorage.setItem('Tasks', JSON.stringify(tasks.filter(task => task.id !== id)));
+      if (response.status === 200) {
+        console.log(response.data.message)
+
+        setTasks(tasks.filter(task => task.id !== id));
+
+        localStorage.setItem('Tasks', JSON.stringify(tasks.filter(task => task.id !== id)));
+      } else {
+        console.log(response.data.message)
+      }
+    } catch (error) {
+      console.log(error.message)
+    }
   }
 
   return (

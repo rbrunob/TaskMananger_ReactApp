@@ -20,23 +20,25 @@ routes.post('/tasks', (req, res) => {
 })
 
 routes.delete('/tasks/:id', (req, res) => {
-    const idRequest = Number(req.params.id);
+    const idRequest = req.params.id;
 
-    const taskToDelete = tasks.findIndex(task => task.id === idRequest);
+    const taskToDeleteIndex = tasks.findIndex(task => task.id == idRequest);
 
-    if (taskToDelete !== -1) {
-        const informationsAboutTask = tasks[taskToDelete];
+    if (taskToDeleteIndex !== -1) {
 
-        tasks.splice(taskToDelete, 1);
+        const deletedTask = tasks[taskToDeleteIndex];
 
-        return res.status(200).json({ message: "Tarefa removida com sucesso!", task: informationsAboutTask.task });
+        tasks.splice(taskToDeleteIndex, 1);
+
+        return res.status(200).json({ message: "Tarefa removida com sucesso!", task: deletedTask, tasks: tasks });
+
     } else {
-        return res.status(404).send({ message: "Ocorreu um erro: Tarefa não encontrada..." });
+        return res.status(404).json({ message: "Ocorreu um erro: Tarefa não encontrada...", tasks: tasks });
     }
 })
 
 routes.put('/tasks/:id', (req, res) => {
-    const idRequest = Number(req.params.id);
+    const idRequest = String(req.params.id);
     const updatedTaskData = req.body;
 
     const taskToUpdate = tasks.find(task => task.id === idRequest);
