@@ -1,0 +1,59 @@
+/* button create */
+
+.container_create {
+    width: 100%;
+    height: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: absolute;
+    bottom: -16px;
+}
+
+.container_create button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    padding: 8px 16px;
+
+    background-color: #9dff9d;
+    border: none;
+    border-radius: 4px;
+
+    font-size: 16px;
+    font-weight: 600;
+    color: #255723;
+
+    font-family: 'Inter', sans-serif;
+
+    cursor: pointer;
+
+    transition: all .2s;
+}
+
+.container_create button:hover {
+    background-color: #b3e5b3;
+}
+
+.container_create input[type="text"] {
+    width: 280px;
+    height: 36px;
+    border: none;
+    border-radius: 4px 0 0 4px;
+    padding: 0 12px;
+    background: #444444;
+    color: white;
+    outline: none;
+}
+
+.container_create input[type="text"]::placeholder {
+    color: white;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+/* button create */

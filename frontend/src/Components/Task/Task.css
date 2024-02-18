@@ -1,0 +1,246 @@
+/* task  */
+
+.container_tasks .task {
+    width: 92%;
+    min-height: 64px;
+    height: auto;
+
+    padding: 8px 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background-color: transparent;
+    box-shadow: 0 0 8px #f4f4f4;
+
+    border-radius: 4px;
+    border: 1px solid #d9d9d929;
+}
+
+.container_tasks .task input[type=checkbox] {
+    position: relative;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 18px;
+    height: 18px;
+}
+
+.container_tasks .task input[type=checkbox]:before {
+    content: "";
+    display: block;
+
+    position: absolute;
+    top: -1px;
+    left: -1px;
+
+    width: 20px;
+    height: 20px;
+
+    border-radius: 2px;
+
+    background-color: #eeeeee;
+
+    transition: all .3s;
+}
+
+.container_tasks .task input[type=checkbox]:checked:before {
+    background-color: #c9f1c9;
+}
+
+.container_tasks .task input[type=checkbox]:after {
+    border-style: solid;
+    border-color: #0fa80f00;
+    border-width: 0 2px 2px 0;
+
+    transition: all .3s;
+}
+
+.container_tasks .task input[type=checkbox]:checked:after {
+    content: "";
+    display: block;
+
+    width: 4px;
+    height: 10px;
+
+    border-color: #0fa80f;
+
+    transform: rotate(45deg);
+
+    position: absolute;
+    top: 1px;
+    left: 7px;
+}
+
+.container_tasks .task .task_subject {
+    width: 270px;
+    height: auto;
+    
+    text-align: start;
+    font-size: 14px;
+    font-weight: 400;
+    color: #303030;
+    -webkit-user-modify: read-only;
+    text-wrap: wrap;
+    resize: none;
+    
+    overflow: hidden;
+}
+
+.container_tasks .task .task_subject.complete {
+    text-decoration: line-through;
+
+    color: #8e8e8e;
+}
+
+.container_tasks .task .task_subject.editing {
+    border-bottom: 1px solid rgb(160, 160, 160);
+    outline: none;
+    border-radius: 0px;
+
+    -webkit-user-modify: read-write;
+}
+
+.container_tasks .task .task_actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 46px;
+}
+
+.task_actions .action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 40px;
+    height: 100%;
+
+    cursor: pointer;
+
+    position: relative;
+}
+
+.task_actions .action svg {
+    z-index: 1;
+
+    color: #303030;
+
+    transition: all .3s;
+
+    pointer-events: none;
+}
+
+.task_actions .action {
+    position: relative;
+}
+
+.task_actions .action::after {
+    content: attr(aria-label);
+
+    position: absolute;
+    top: -40px;
+
+    background-color: #555555;
+
+    color: #fff;
+    font-size: 10px;
+    letter-spacing: 1px;
+    font-weight: 400;
+    text-transform: uppercase;
+
+    padding: 4px 8px;
+    border-radius: 2px;
+
+    display: none;
+}
+
+.task_actions .action:hover::after {
+    display: block;
+}
+
+.task_actions .task_edit:before {
+    content: "";
+
+    width: 0%;
+    height: 100%;
+
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    background-color: #ffefb5;
+
+    z-index: 0;
+
+    transition: all .2s;
+}
+
+.task_actions .task_edit:hover:before {
+    width: 100%;
+}
+
+.task_actions .task_edit:hover svg {
+    color: #97802a;
+
+    pointer-events: none;
+}
+
+.task_actions .task_delete:before {
+    content: "";
+
+    width: 0%;
+    height: 100%;
+
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    background-color: #eb9494;
+
+    z-index: 0;
+
+    transition: all .2s;
+}
+
+.task_actions .task_delete:hover:before {
+    width: 100%;
+}
+
+.task_actions .task_delete:hover svg {
+    color: #8a4040;
+
+    pointer-events: none;
+}
+
+.container_tasks .empty_container_tasks {
+    font-size: 16px;
+    font-weight: 300;
+    color: #bebebe;
+    
+    user-select: none;
+    pointer-events: none;
+}
+
+.task_actions .task_edit.editing {
+    background: #abe3ab;
+}
+
+.task_actions .task_edit.editing:before {
+    background-color: #abe3ab;
+}
+
+.task_actions .task_edit.editing svg {
+    color: #1f731f;
+    font-size: 20px;
+
+    pointer-events: none;
+}
+
+/* task  */
