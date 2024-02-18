@@ -1,12 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Create from "./Components/Create/Create";
 import Task from "./Components/Task/Task";
 import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios';
 
 function App() {
   const [tasks, setTasks] = useState(JSON.parse(localStorage.getItem('Tasks')) || []);
 
-  const insertNewTask = (task) => {
+  useEffect(() => {
+    const getTasks = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/tasks');
+
+        if (response.data?.length > 0) {
+          setTasks(response.data);
+        }
+
+      } catch (error) {
+        console.error('Ocorreu um erro ao realizar busca de tarefas:', error);
+      }
+    };
+
+    getTasks();
+  }, []);
+
+  const insertNewTask = async (task) => {
     setTasks([
       ...tasks,
       {
@@ -26,6 +44,29 @@ function App() {
         isEditing: false
       }
     ]));
+
+    try {
+      const response = await axios.post('http://localhost:3000/tasks',
+        JSON.stringify(
+          {
+            id: uuidv4(),
+            task: task,
+            isComplete: false,
+            isEditing: false
+          }
+        ),
+        {
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+
+      if (response.status === 200) {
+        console.log(response.data.message)
+      }
+
+    } catch (error) {
+      console.error('Ocorreu um error ao adicionar uma tarefa', error);
+    }
   }
 
   const handleStateComplete = (id) => {
